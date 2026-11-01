@@ -8,8 +8,8 @@ export const appIcons=[
 ];
 export const iconOfflinePaths=['./icons.js',...appIcons.flatMap(({id})=>[
  `./manifest-icon-${id}.webmanifest`,`./install-icon-${id}.html`,
- ...[180,192,512].map(size=>`./icons/choices/${id}/icon-${size}.png`),
- `./icons/choices/${id}/icon.ico`
+ ...[180,192,512].map(size=>`./icon-${id}-${size}.png`),
+ `./icon-${id}.ico`
 ])];
 const byId=id=>document.getElementById(id);
 const isValid=id=>appIcons.some(icon=>icon.id===id);
@@ -23,19 +23,19 @@ else {let stored=false;try{stored=isValid(localStorage.getItem('sinfondo-app-ico
 function applyIcon(id){
  if(!isValid(id))return;
  selectedIcon=id;const icon=appIcons.find(item=>item.id===id);
- const brand=document.querySelector('.brand img');brand.src=`icons/choices/${id}/icon-192.png`;
+ const brand=document.querySelector('.brand img');brand.src=`icon-${id}-192.png`;
  document.querySelector('link[rel="manifest"]').href=`manifest-icon-${id}.webmanifest`;
- document.querySelector('link[rel="apple-touch-icon"]').href=`icons/choices/${id}/icon-180.png`;
- document.querySelector('link[rel="icon"]').href=`icons/choices/${id}/icon-192.png`;
+ document.querySelector('link[rel="apple-touch-icon"]').href=`icon-${id}-180.png`;
+ document.querySelector('link[rel="icon"]').href=`icon-${id}-192.png`;
  document.querySelectorAll('[data-app-icon]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.appIcon===id)));
  byId('appIconSelection').textContent=`Elegido: ${icon.name}${id==='1'?' · predeterminado':''}`;
  byId('appIconInstall').href=`install-icon-${id}.html`;
  const png=byId('appIconDownloadPng'),ico=byId('appIconDownloadIco');
- png.href=`icons/choices/${id}/icon-512.png`;png.download=`SinFondo-${icon.slug}.png`;
- ico.href=`icons/choices/${id}/icon.ico`;ico.download=`SinFondo-${icon.slug}.ico`;
+ png.href=`icon-${id}-512.png`;png.download=`SinFondo-${icon.slug}.png`;
+ ico.href=`icon-${id}.ico`;ico.download=`SinFondo-${icon.slug}.ico`;
  try{localStorage.setItem('sinfondo-app-icon',id);}catch{}
 }
-for(const icon of appIcons){const button=document.createElement('button');button.type='button';button.className='app-icon-option';button.dataset.appIcon=icon.id;button.setAttribute('aria-label',`Icono ${icon.id}: ${icon.name}`);button.setAttribute('aria-pressed','false');const img=document.createElement('img');img.src=`icons/choices/${icon.id}/icon-192.png`;img.width=92;img.height=92;img.alt='';const label=document.createElement('span');label.textContent=icon.name;button.append(img,label);button.onclick=()=>applyIcon(icon.id);byId('appIconOptions').append(button);}
+for(const icon of appIcons){const button=document.createElement('button');button.type='button';button.className='app-icon-option';button.dataset.appIcon=icon.id;button.setAttribute('aria-label',`Icono ${icon.id}: ${icon.name}`);button.setAttribute('aria-pressed','false');const img=document.createElement('img');img.src=`icon-${icon.id}-192.png`;img.width=92;img.height=92;img.alt='';const label=document.createElement('span');label.textContent=icon.name;button.append(img,label);button.onclick=()=>applyIcon(icon.id);byId('appIconOptions').append(button);}
 applyIcon(selectedIcon);
 const dialog=byId('appIconDialog');byId('appIconBtn').onclick=()=>dialog.showModal();
 function closeDialog(){dialog.close();byId('appIconBtn').focus();}

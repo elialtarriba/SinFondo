@@ -1,8 +1,22 @@
-import { env, SamModel, AutoProcessor, RawImage, Tensor } from './vendor/transformers.min.js';
+import { env, SamModel, AutoProcessor, RawImage, Tensor } from './transformers.min.js';
+// Transformers requests virtual model paths; this adapter maps each one to a real flat file.
+const flatModelFiles={
+ 'slimsam/config.json':'model-config.json',
+ 'slimsam/preprocessor_config.json':'model-preprocessor.json',
+ 'slimsam/onnx/vision_encoder_quantized.onnx':'vision_encoder_quantized.onnx',
+ 'slimsam/onnx/prompt_encoder_mask_decoder_quantized.onnx':'prompt_encoder_mask_decoder_quantized.onnx'
+};
 env.allowRemoteModels = false;
-env.localModelPath = new URL('./models/', self.location.href).href;
+env.allowLocalModels = true;
+env.localModelPath = new URL('./', self.location.href).href;
 env.useBrowserCache = false;
-env.backends.onnx.wasm.wasmPaths = new URL('./vendor/', self.location.href).href;
+env.useFSCache = false;
+env.useCustomCache = true;
+env.customCache={
+ async match(request){const path=new URL(typeof request==='string'?request:request.url,self.location.href).pathname;const key=Object.keys(flatModelFiles).find(name=>path.endsWith('/'+name));if(!key)return undefined;const response=await fetch(new URL(flatModelFiles[key],self.location.href));return response.ok?response:undefined;},
+ async put(){}
+};
+env.backends.onnx.wasm.wasmPaths = new URL('./', self.location.href).href;
 env.backends.onnx.wasm.numThreads = 1;
 env.backends.onnx.wasm.proxy = false;
 let model, processor, embeddings, sizes, originalSizes;
