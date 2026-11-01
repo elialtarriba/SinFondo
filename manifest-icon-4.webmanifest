@@ -1,0 +1,26 @@
+{
+  "id": "./",
+  "name": "SinFondo · Tu pequeño estudio",
+  "short_name": "SinFondo",
+  "description": "Recorta fotos, edita capas y guarda PNG o JPG. IA en tu dispositivo.",
+  "lang": "es",
+  "start_url": "./?appIcon=4",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8f5ef",
+  "theme_color": "#483026",
+  "icons": [
+    {
+      "src": "icons/choices/4/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/choices/4/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
